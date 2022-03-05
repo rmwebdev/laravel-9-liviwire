@@ -1,18 +1,38 @@
 <?php
 
+use App\Http\Controllers\Admin\AuditLogController;
+use App\Http\Controllers\Admin\ContentCategoryController;
+use App\Http\Controllers\Admin\ContentPageController;
+use App\Http\Controllers\Admin\ContentTagController;
+use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\LessonController;
+use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\QuestionController;
+use App\Http\Controllers\Admin\QuestionOptionController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\TaskCalendarController;
+use App\Http\Controllers\Admin\TaskController;
+use App\Http\Controllers\Admin\TaskStatusController;
+use App\Http\Controllers\Admin\TaskTagController;
+use App\Http\Controllers\Admin\TestAnswerController;
+use App\Http\Controllers\Admin\TestController;
+use App\Http\Controllers\Admin\TestResultController;
+use App\Http\Controllers\Admin\UserAlertController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\ApprovalController;
 use App\Http\Controllers\Auth\UserProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/login');
 
-Auth::routes(['register' => false]);
+Auth::routes();
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], function () {
+Route::get('email/approval', [ApprovalController::class, 'show'])->name('approval.notice');
+
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'approved']], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     // Permissions
@@ -24,6 +44,70 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], 
     // Users
     Route::post('users/media', [UserController::class, 'storeMedia'])->name('users.storeMedia');
     Route::resource('users', UserController::class, ['except' => ['store', 'update', 'destroy']]);
+
+    // Courses
+    Route::post('courses/media', [CourseController::class, 'storeMedia'])->name('courses.storeMedia');
+    Route::resource('courses', CourseController::class, ['except' => ['store', 'update', 'destroy']]);
+
+    // Lessons
+    Route::post('lessons/media', [LessonController::class, 'storeMedia'])->name('lessons.storeMedia');
+    Route::resource('lessons', LessonController::class, ['except' => ['store', 'update', 'destroy']]);
+
+    // Tests
+    Route::resource('tests', TestController::class, ['except' => ['store', 'update', 'destroy']]);
+
+    // Questions
+    Route::post('questions/media', [QuestionController::class, 'storeMedia'])->name('questions.storeMedia');
+    Route::resource('questions', QuestionController::class, ['except' => ['store', 'update', 'destroy']]);
+
+    // Question Options
+    Route::resource('question-options', QuestionOptionController::class, ['except' => ['store', 'update', 'destroy']]);
+
+    // Test Results
+    Route::resource('test-results', TestResultController::class, ['except' => ['store', 'update', 'destroy']]);
+
+    // Test Answers
+    Route::resource('test-answers', TestAnswerController::class, ['except' => ['store', 'update', 'destroy']]);
+
+    // Audit Logs
+    Route::resource('audit-logs', AuditLogController::class, ['except' => ['store', 'update', 'destroy', 'create', 'edit']]);
+
+    // User Alert
+    Route::get('user-alerts/seen', [UserAlertController::class, 'seen'])->name('user-alerts.seen');
+    Route::resource('user-alerts', UserAlertController::class, ['except' => ['store', 'update', 'destroy']]);
+
+    // Content Category
+    Route::resource('content-categories', ContentCategoryController::class, ['except' => ['store', 'update', 'destroy']]);
+
+    // Content Tag
+    Route::resource('content-tags', ContentTagController::class, ['except' => ['store', 'update', 'destroy']]);
+
+    // Content Page
+    Route::post('content-pages/media', [ContentPageController::class, 'storeMedia'])->name('content-pages.storeMedia');
+    Route::resource('content-pages', ContentPageController::class, ['except' => ['store', 'update', 'destroy']]);
+
+    // Task Status
+    Route::resource('task-statuses', TaskStatusController::class, ['except' => ['store', 'update', 'destroy']]);
+
+    // Task Tag
+    Route::resource('task-tags', TaskTagController::class, ['except' => ['store', 'update', 'destroy']]);
+
+    // Task
+    Route::post('tasks/media', [TaskController::class, 'storeMedia'])->name('tasks.storeMedia');
+    Route::resource('tasks', TaskController::class, ['except' => ['store', 'update', 'destroy']]);
+
+    // Task Calendar
+    Route::resource('task-calendars', TaskCalendarController::class, ['except' => ['store', 'update', 'destroy', 'create', 'edit', 'show']]);
+
+    // Messages
+    Route::get('messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::post('messages', [MessageController::class, 'store'])->name('messages.store');
+    Route::get('messages/inbox', [MessageController::class, 'inbox'])->name('messages.inbox');
+    Route::get('messages/outbox', [MessageController::class, 'outbox'])->name('messages.outbox');
+    Route::get('messages/create', [MessageController::class, 'create'])->name('messages.create');
+    Route::get('messages/{conversation}', [MessageController::class, 'show'])->name('messages.show');
+    Route::post('messages/{conversation}', [MessageController::class, 'update'])->name('messages.update');
+    Route::post('messages/{conversation}/destroy', [MessageController::class, 'destroy'])->name('messages.destroy');
 });
 
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'middleware' => ['auth']], function () {

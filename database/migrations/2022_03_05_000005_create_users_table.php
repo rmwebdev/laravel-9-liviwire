@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('locale')->nullable();
             $table->string('phone')->nullable();
             $table->longText('address')->nullable();
+            $table->boolean('is_approved')->default(0)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -75,6 +75,10 @@
                             @include('components.table.sort', ['field' => 'address'])
                         </th>
                         <th>
+                            {{ trans('cruds.user.fields.is_approved') }}
+                            @include('components.table.sort', ['field' => 'is_approved'])
+                        </th>
+                        <th>
                         </th>
                     </tr>
                 </thead>
@@ -120,6 +124,9 @@
                             </td>
                             <td>
                                 {{ $user->address }}
+                            </td>
+                            <td>
+                                <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $user->is_approved ? 'checked' : '' }}>
                             </td>
                             <td>
                                 <div class="flex justify-end">
