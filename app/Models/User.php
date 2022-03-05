@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use \DateTimeInterface;
+use App\Models\UserAlert;
 use App\Support\HasAdvancedFilter;
 use Carbon\Carbon;
 use Hash;
@@ -34,6 +35,7 @@ class User extends Authenticatable implements HasLocalePreference, HasMedia
         'locale',
         'phone',
         'address',
+        'is_approved',
     ];
 
     public $filterable = [
@@ -49,6 +51,10 @@ class User extends Authenticatable implements HasLocalePreference, HasMedia
 
     protected $appends = [
         'thumb',
+    ];
+
+    protected $casts = [
+        'is_approved' => 'boolean',
     ];
 
     protected $hidden = [
@@ -70,6 +76,7 @@ class User extends Authenticatable implements HasLocalePreference, HasMedia
         'locale',
         'phone',
         'address',
+        'is_approved',
     ];
 
     public function getIsAdminAttribute()
@@ -80,6 +87,11 @@ class User extends Authenticatable implements HasLocalePreference, HasMedia
     public function scopeAdmins()
     {
         return $this->whereHas('roles', fn ($q) => $q->where('title', 'Admin'));
+    }
+
+    public function alerts()
+    {
+        return $this->belongsToMany(UserAlert::class)->withPivot('seen_at');
     }
 
     public function preferredLocale()

@@ -99,6 +99,14 @@
                                 {{ $user->address }}
                             </td>
                         </tr>
+                        <tr>
+                            <th>
+                                {{ trans('cruds.user.fields.is_approved') }}
+                            </th>
+                            <td>
+                                <input class="disabled:opacity-50 disabled:cursor-not-allowed" type="checkbox" disabled {{ $user->is_approved ? 'checked' : '' }}>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

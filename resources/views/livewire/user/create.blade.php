@@ -80,6 +80,16 @@
             {{ trans('cruds.user.fields.address_helper') }}
         </div>
     </div>
+    <div class="form-group {{ $errors->has('user.is_approved') ? 'invalid' : '' }}">
+        <input class="form-control" type="checkbox" name="is_approved" id="is_approved" wire:model.defer="user.is_approved">
+        <label class="form-label inline ml-1" for="is_approved">{{ trans('cruds.user.fields.is_approved') }}</label>
+        <div class="validation-message">
+            {{ $errors->first('user.is_approved') }}
+        </div>
+        <div class="help-block">
+            {{ trans('cruds.user.fields.is_approved_helper') }}
+        </div>
+    </div>
 
     <div class="form-group">
         <button class="btn btn-indigo mr-2" type="submit">

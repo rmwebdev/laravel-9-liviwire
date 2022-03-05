@@ -118,6 +118,9 @@ class Edit extends Component
                 'string',
                 'nullable',
             ],
+            'user.is_approved' => [
+                'boolean',
+            ],
         ];
     }
 

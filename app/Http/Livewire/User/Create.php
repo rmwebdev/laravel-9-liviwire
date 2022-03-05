@@ -37,7 +37,8 @@ class Create extends Component
 
     public function mount(User $user)
     {
-        $this->user = $user;
+        $this->user              = $user;
+        $this->user->is_approved = false;
         $this->initListsForFields();
     }
 
@@ -109,6 +110,9 @@ class Create extends Component
             'user.address' => [
                 'string',
                 'nullable',
+            ],
+            'user.is_approved' => [
+                'boolean',
             ],
         ];
     }
